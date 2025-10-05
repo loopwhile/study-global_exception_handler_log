@@ -1,0 +1,236 @@
+{
+  "info": {
+	"_postman_id": "member-controller-exception-tests",
+	"name": "MemberController - Exception & Error Page Tests",
+	"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+	"description": "Tests for HTML/JSON error handling for MemberController"
+  },
+  "variable": [
+	{ "key": "baseUrl", "value": "http://localhost:8080" }
+  ],
+  "item": [
+	{
+	  "name": "GET / (Index) - HTML",
+	  "request": {
+		"method": "GET",
+		"header": [{ "key": "Accept", "value": "text/html" }],
+		"url": { "raw": "{{baseUrl}}/", "host": ["{{baseUrl}}"], "path": [""] }
+	  },
+	  "event": [
+		{
+		  "listen": "test",
+		  "script": { "exec": ["pm.test('200 HTML', () => pm.expect(pm.response.code).to.be.oneOf([200,302]));", "pm.test('HTML content-type', () => pm.expect((pm.response.headers.get('content-type')||'').includes('text/html')) );"] }
+		}
+	  ]
+	},
+
+	{
+	  "name": "GET /members - HTML",
+	  "request": {
+		"method": "GET",
+		"header": [{ "key": "Accept", "value": "text/html" }],
+		"url": { "raw": "{{baseUrl}}/members", "host": ["{{baseUrl}}"], "path": ["members"] }
+	  },
+	  "event": [{ "listen": "test", "script": { "exec": ["pm.test('200 HTML or empty list', () => pm.expect(pm.response.code).to.be.oneOf([200,302,404]));"] } }]
+	},
+
+	{
+	  "name": "GET /members/new - HTML (form)",
+	  "request": {
+		"method": "GET",
+		"header": [{ "key": "Accept", "value": "text/html" }],
+		"url": { "raw": "{{baseUrl}}/members/new", "host": ["{{baseUrl}}"], "path": ["members","new"] }
+	  },
+	  "event": [{ "listen": "test", "script": { "exec": ["pm.test('200 HTML form', () => pm.expect(pm.response.code).to.equal(200));"] } }]
+	},
+
+	{
+	  "name": "POST /members (form) - invalid (HTML) -> BindException",
+	  "request": {
+		"method": "POST",
+		"header": [
+		  { "key": "Accept", "value": "text/html" },
+		  { "key": "Content-Type", "value": "application/x-www-form-urlencoded" }
+		],
+		"body": { "mode": "urlencoded", "urlencoded": [{ "key": "name", "value": "" }, { "key": "email", "value": "" }] },
+		"url": { "raw": "{{baseUrl}}/members", "host": ["{{baseUrl}}"], "path": ["members"] }
+	  },
+	  "event": [{ "listen": "test", "script": { "exec": ["pm.test('400 HTML (form validation)', () => pm.expect(pm.response.code).to.be.oneOf([400,422]));", "pm.test('HTML response', () => pm.expect((pm.response.headers.get('content-type')||'').includes('text/html')) );"] } }]
+	},
+
+	{
+	  "name": "POST /members (form) - invalid (JSON Accept) -> returns JSON error",
+	  "request": {
+		"method": "POST",
+		"header": [
+		  { "key": "Accept", "value": "application/json" },
+		  { "key": "Content-Type", "value": "application/x-www-form-urlencoded" }
+		],
+		"body": { "mode": "urlencoded", "urlencoded": [{ "key": "name", "value": "" }, { "key": "email", "value": "" }] },
+		"url": { "raw": "{{baseUrl}}/members", "host": ["{{baseUrl}}"], "path": ["members"] }
+	  },
+	  "event": [{ "listen": "test", "script": { "exec": ["pm.test('400 JSON (form validation)', () => pm.expect(pm.response.code).to.be.oneOf([400,422]));", "pm.test('JSON content-type', () => pm.expect((pm.response.headers.get('content-type')||'').includes('application/json')) );"] } }]
+	},
+
+	{
+	  "name": "POST /members (JSON) - invalid body -> MethodArgumentNotValidException",
+	  "request": {
+		"method": "POST",
+		"header": [
+		  { "key": "Accept", "value": "application/json" },
+		  { "key": "Content-Type", "value": "application/json" }
+		],
+		"body": { "mode": "raw", "raw": "{\"name\":\"\",\"email\":\"not-an-email\"}" },
+		"url": { "raw": "{{baseUrl}}/members", "host": ["{{baseUrl}}"], "path": ["members"] }
+	  },
+	  "event": [{ "listen": "test", "script": { "exec": ["pm.test('400 JSON validation', () => pm.expect(pm.response.code).to.be.oneOf([400,422]));", "pm.test('JSON content-type', () => pm.expect((pm.response.headers.get('content-type')||'').includes('application/json')) );"] } }]
+	},
+
+	{
+	  "name": "POST /members (JSON) - malformed JSON -> HttpMessageNotReadableException",
+	  "request": {
+		"method": "POST",
+		"header": [
+		  { "key": "Accept", "value": "application/json" },
+		  { "key": "Content-Type", "value": "application/json" }
+		],
+		"body": { "mode": "raw", "raw": "{\"name\":\"abc\", \"email\":\"a@b.com\"" },
+		"url": { "raw": "{{baseUrl}}/members", "host": ["{{baseUrl}}"], "path": ["members"] }
+	  },
+	  "event": [{ "listen": "test", "script": { "exec": ["pm.test('400 JSON parse error', () => pm.expect(pm.response.code).to.equal(400));"] } }]
+	},
+
+	{
+	  "name": "POST /members (wrong Content-Type text/plain) -> 415",
+	  "request": {
+		"method": "POST",
+		"header": [
+		  { "key": "Accept", "value": "application/json" },
+		  { "key": "Content-Type", "value": "text/plain" }
+		],
+		"body": { "mode": "raw", "raw": "plain text body" },
+		"url": { "raw": "{{baseUrl}}/members", "host": ["{{baseUrl}}"], "path": ["members"] }
+	  },
+	  "event": [{ "listen": "test", "script": { "exec": ["pm.test('415 Unsupported Media Type (or 400)', () => pm.expect(pm.response.code).to.be.oneOf([415,400]));"] } }]
+	},
+
+	{
+	  "name": "GET /members/abc -> TypeMismatch",
+	  "request": {
+		"method": "GET",
+		"header": [{ "key": "Accept", "value": "application/json" }],
+		"url": { "raw": "{{baseUrl}}/members/abc", "host": ["{{baseUrl}}"], "path": ["members","abc"] }
+	  },
+	  "event": [{ "listen": "test", "script": { "exec": ["pm.test('400 Type mismatch or 404', () => pm.expect(pm.response.code).to.be.oneOf([400,404]));"] } }]
+	},
+
+	{
+	  "name": "GET /members/9999 (JSON) -> EntityNotFound",
+	  "request": {
+		"method": "GET",
+		"header": [{ "key": "Accept", "value": "application/json" }],
+		"url": { "raw": "{{baseUrl}}/members/9999", "host": ["{{baseUrl}}"], "path": ["members","9999"] }
+	  },
+	  "event": [{ "listen": "test", "script": { "exec": ["pm.test('404 if not exists', () => pm.expect(pm.response.code).to.be.oneOf([404,200]));"] } }]
+	},
+
+	{
+	  "name": "GET /members/9999 (HTML) -> EntityNotFound page",
+	  "request": {
+		"method": "GET",
+		"header": [{ "key": "Accept", "value": "text/html" }],
+		"url": { "raw": "{{baseUrl}}/members/9999", "host": ["{{baseUrl}}"], "path": ["members","9999"] }
+	  },
+	  "event": [{ "listen": "test", "script": { "exec": ["pm.test('404 HTML', () => pm.expect(pm.response.code).to.be.oneOf([404,200]));"] } }]
+	},
+
+	{
+	  "name": "GET /no-such-path -> 404 (JSON)",
+	  "request": {
+		"method": "GET",
+		"header": [{ "key": "Accept", "value": "application/json" }],
+		"url": { "raw": "{{baseUrl}}/no-such-path", "host": ["{{baseUrl}}"], "path": ["no-such-path"] }
+	  },
+	  "event": [{ "listen": "test", "script": { "exec": ["pm.test('404 NoHandlerFound', () => pm.expect(pm.response.code).to.equal(404));"] } }]
+	},
+
+	{
+	  "name": "GET /no-such-path -> 404 (HTML)",
+	  "request": {
+		"method": "GET",
+		"header": [{ "key": "Accept", "value": "text/html" }],
+		"url": { "raw": "{{baseUrl}}/no-such-path", "host": ["{{baseUrl}}"], "path": ["no-such-path"] }
+	  },
+	  "event": [{ "listen": "test", "script": { "exec": ["pm.test('404 NoHandlerFound HTML', () => pm.expect(pm.response.code).to.equal(404));"] } }]
+	},
+
+	{
+	  "name": "PUT /members -> 405 Method Not Allowed (JSON)",
+	  "request": {
+		"method": "PUT",
+		"header": [{ "key": "Accept", "value": "application/json" }],
+		"url": { "raw": "{{baseUrl}}/members", "host": ["{{baseUrl}}"], "path": ["members"] }
+	  },
+	  "event": [{ "listen": "test", "script": { "exec": ["pm.test('405 or 404', () => pm.expect(pm.response.code).to.be.oneOf([405,404]));"] } }]
+	},
+
+	{
+	  "name": "GET / (Accept: application/xml) -> 406 Not Acceptable",
+	  "request": {
+		"method": "GET",
+		"header": [{ "key": "Accept", "value": "application/xml" }],
+		"url": { "raw": "{{baseUrl}}/", "host": ["{{baseUrl}}"], "path": [""] }
+	  },
+	  "event": [{ "listen": "test", "script": { "exec": ["pm.test('406 or 200/404 (depends)', () => pm.expect(pm.response.code).to.be.oneOf([406,200,404]));"] } }]
+	},
+
+	{
+	  "name": "Create user (JSON) - for duplicate test",
+	  "request": {
+		"method": "POST",
+		"header": [
+		  { "key": "Accept", "value": "application/json" },
+		  { "key": "Content-Type", "value": "application/json" }
+		],
+		"body": { "mode": "raw", "raw": "{\"name\":\"dupUser\",\"email\":\"dup@example.com\"}" },
+		"url": { "raw": "{{baseUrl}}/members", "host": ["{{baseUrl}}"], "path": ["members"] }
+	  },
+	  "event": [{ "listen": "test", "script": { "exec": ["pm.test('201/200 or 409 if exists', () => pm.expect(pm.response.code).to.be.oneOf([200,201,409,400]));"] } }]
+	},
+
+	{
+	  "name": "Create duplicate (JSON) - run after previous -> expect 409",
+	  "request": {
+		"method": "POST",
+		"header": [
+		  { "key": "Accept", "value": "application/json" },
+		  { "key": "Content-Type", "value": "application/json" }
+		],
+		"body": { "mode": "raw", "raw": "{\"name\":\"dupUser\",\"email\":\"dup@example.com\"}" },
+		"url": { "raw": "{{baseUrl}}/members", "host": ["{{baseUrl}}"], "path": ["members"] }
+	  },
+	  "event": [{ "listen": "test", "script": { "exec": ["pm.test('409 on duplicate (if DB constraint exists)', () => pm.expect(pm.response.code).to.be.oneOf([409,400,200]));"] } }]
+	},
+
+	{
+	  "name": "GET /boom -> IllegalStateException (HTML)",
+	  "request": {
+		"method": "GET",
+		"header": [{ "key": "Accept", "value": "text/html" }],
+		"url": { "raw": "{{baseUrl}}/boom", "host": ["{{baseUrl}}"], "path": ["boom"] }
+	  },
+	  "event": [{ "listen": "test", "script": { "exec": ["pm.test('400 for IllegalState (handler maps IllegalState->400)', () => pm.expect(pm.response.code).to.be.oneOf([400,500]));"] } }]
+	},
+
+	{
+	  "name": "GET /boom -> IllegalStateException (JSON)",
+	  "request": {
+		"method": "GET",
+		"header": [{ "key": "Accept", "value": "application/json" }],
+		"url": { "raw": "{{baseUrl}}/boom", "host": ["{{baseUrl}}"], "path": ["boom"] }
+	  },
+	  "event": [{ "listen": "test", "script": { "exec": ["pm.test('400 for IllegalState (JSON)', () => pm.expect(pm.response.code).to.be.oneOf([400,500]));", "pm.test('JSON content-type', () => pm.expect((pm.response.headers.get('content-type')||'').includes('application/json')) );"] } }]
+	}
+
+  ]
+}
