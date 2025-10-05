@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <title>오류가 발생했습니다</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <style>
+    body {font-family: ui-sans-serif, system-ui; margin:0; background:#fafafa; color:#111;}
+    .wrap {max-width: 720px; margin: 10vh auto; background:#fff; border-radius:16px;
+           box-shadow: 0 10px 30px rgba(0,0,0,.08); padding: 32px;}
+    h1 {margin:0 0 8px; font-size:24px;}
+    .meta {margin:12px 0 20px; color:#666; font-size:14px;}
+    .code {display:inline-block; background:#111; color:#fff; padding:2px 8px; border-radius:8px; font-weight:600;}
+    .box {background:#f6f6f7; border:1px solid #eee; padding:16px; border-radius:12px;}
+    .actions {display:flex; gap:12px; margin-top:24px; align-items:center;}
+    button {padding:10px 14px; border-radius:10px; border:0; cursor:pointer;}
+    .primary {background:#111; color:#fff;}
+    .ghost {background:#eee;}
+    .count {font-weight:700;}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <h1>문제가 발생했어요.</h1>
+  <div class="meta">
+    상태코드: <span class="code" th:text="${status}">500</span>
+    <span style="margin-left:8px;">에러코드: <span th:text="${error}">COMMON-500</span></span>
+  </div>
+
+  <div class="box">
+    <div style="margin-bottom:6px; color:#444;">메시지</div>
+    <div th:text="${message} ?: '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.'">
+      일시적인 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.
+    </div>
+    <div class="meta" style="margin-top:12px;">
+      경로: <span th:text="${path}">/path</span>
+      · 시간: <span th:text="${#temporals.format(timestamp, 'yyyy-MM-dd HH:mm:ss')}">2025-10-05 11:00:00</span>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button class="primary" id="backNow">바로 이전 페이지로</button>
+    <button class="ghost" onclick="window.location.href='/'">홈으로</button>
+    <div style="margin-left:auto;">자동 복귀까지 <span class="count" id="count">10</span>초</div>
+  </div>
+</div>
+
+<script>
+  (function () {
+	const countEl = document.getElementById('count');
+	const backNow = document.getElementById('backNow');
+
+	function goBack() {
+	  if (document.referrer && document.referrer !== location.href) {
+		history.back();
+	  } else {
+		location.replace('/');
+	  }
+	}
+	let sec = 10;
+	const timer = setInterval(() => {
+	  sec -= 1;
+	  countEl.textContent = String(sec);
+	  if (sec <= 0) { clearInterval(timer); goBack(); }
+	}, 1000);
+
+	backNow.addEventListener('click', () => { clearInterval(timer); goBack(); });
+  })();
+</script>
+</body>
+</html>

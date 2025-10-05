@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"/><title>회원 폼</title></head>
+<body>
+<h2>회원 폼</h2>
+<p><a href="/">홈</a> | <a href="/members">목록</a></p>
+
+<form th:action="${action}" method="post">
+  <div>
+    <label>이름</label>
+    <input type="text" name="name" th:value="${member.name}">
+  </div>
+  <div>
+    <label>이메일</label>
+    <input type="email" name="email" th:value="${member.email}">
+  </div>
+  <div><button type="submit">저장</button></div>
+</form>
+</body>
+</html>

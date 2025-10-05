@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"/><title>Home</title></head>
+<body>
+<h1>Global Exception Handler Demo (MariaDB)</h1>
+<p>회원 수: <span th:text="${count}">0</span></p>
+<p>
+	<a href="/members">회원 목록</a> |
+	<a href="/members/new">회원 등록</a> |
+	<a href="/boom">강제 예외(테스트)</a>
+</p>
+</body>
+</html>
