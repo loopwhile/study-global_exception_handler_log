@@ -48,3 +48,43 @@
 2025-10-17 18:06:06.853 WARN  [http-nio-8080-exec-7] [a54840ec] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.dao.DuplicateKeyException: 이미 사용 중인 이메일]
 2025-10-17 18:06:24.610 WARN  [http-nio-8080-exec-5] [992d19a7] c.s.e.c.e.GlobalRestExceptionHandler - [COMMON-409] [API][rid=992d19a7][POST /api/members] 중복 키
 2025-10-17 18:06:24.611 WARN  [http-nio-8080-exec-5] [992d19a7] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.dao.DuplicateKeyException: 이미 사용 중인 이메일]
+2025-10-17 18:11:17.095 INFO  [background-preinit] [] o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.3.Final
+2025-10-17 18:11:17.120 INFO  [restartedMain] [] com.study.exception.MainApplication - Starting MainApplication using Java 21.0.8 with PID 18172 (D:\DEV05\workspace_IntelliJ\study_spring\study-global_exception_handler_log\build\classes\java\main started by ict1 in D:\DEV05\workspace_IntelliJ\study_spring\study-global_exception_handler_log)
+2025-10-17 18:11:17.120 INFO  [restartedMain] [] com.study.exception.MainApplication - No active profile set, falling back to 1 default profile: "default"
+2025-10-17 18:11:17.147 INFO  [restartedMain] [] o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-10-17 18:11:17.147 INFO  [restartedMain] [] o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-10-17 18:11:17.616 INFO  [restartedMain] [] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-10-17 18:11:17.662 INFO  [restartedMain] [] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 38 ms. Found 1 JPA repository interface.
+2025-10-17 18:11:18.089 INFO  [restartedMain] [] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2025-10-17 18:11:18.101 INFO  [restartedMain] [] o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2025-10-17 18:11:18.103 INFO  [restartedMain] [] o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-10-17 18:11:18.103 INFO  [restartedMain] [] o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.46]
+2025-10-17 18:11:18.137 INFO  [restartedMain] [] o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-10-17 18:11:18.138 INFO  [restartedMain] [] o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 990 ms
+2025-10-17 18:11:18.304 INFO  [restartedMain] [] o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-10-17 18:11:18.368 INFO  [restartedMain] [] org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.29.Final
+2025-10-17 18:11:18.420 INFO  [restartedMain] [] o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-10-17 18:11:18.629 INFO  [restartedMain] [] o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-10-17 18:11:18.654 INFO  [restartedMain] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-10-17 18:11:18.711 INFO  [restartedMain] [] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.mariadb.jdbc.Connection@295849e5
+2025-10-17 18:11:18.712 INFO  [restartedMain] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-10-17 18:11:18.746 INFO  [restartedMain] [] o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 11.8.3
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-10-17 18:11:19.171 INFO  [restartedMain] [] o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-10-17 18:11:19.207 INFO  [restartedMain] [] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-10-17 18:11:19.489 INFO  [restartedMain] [] o.s.b.a.w.s.WelcomePageHandlerMapping - Adding welcome page template: index
+2025-10-17 18:11:19.743 INFO  [restartedMain] [] o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2025-10-17 18:11:19.757 INFO  [restartedMain] [] o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2025-10-17 18:11:19.772 INFO  [restartedMain] [] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2025-10-17 18:11:19.780 INFO  [restartedMain] [] com.study.exception.MainApplication - Started MainApplication in 2.998 seconds (process running for 3.248)
+2025-10-17 18:11:22.295 INFO  [http-nio-8080-exec-1] [] o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-10-17 18:11:22.295 INFO  [http-nio-8080-exec-1] [] o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2025-10-17 18:11:22.295 INFO  [http-nio-8080-exec-1] [] o.s.web.servlet.DispatcherServlet - Completed initialization in 0 ms
+2025-10-17 18:11:25.526 WARN  [http-nio-8080-exec-3] [ad14b3ff] c.s.e.c.e.GlobalRestExceptionHandler - [COMMON-409] [API][rid=ad14b3ff][POST /api/members] 중복 키
+2025-10-17 18:11:25.533 WARN  [http-nio-8080-exec-3] [ad14b3ff] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.dao.DuplicateKeyException: 이미 사용 중인 이메일]
