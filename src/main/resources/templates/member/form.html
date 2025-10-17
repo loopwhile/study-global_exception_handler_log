@@ -5,15 +5,19 @@
 <h2>회원 폼</h2>
 <p><a href="/">홈</a> | <a href="/members">목록</a></p>
 
-<form th:action="${action}" method="post">
+<form th:action="${action}" method="post" th:object="${member}">
   <div>
     <label>이름</label>
-    <input type="text" name="name" th:value="${member.name}">
+    <input type="text" th:field="*{name}">
+    <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
   </div>
+
   <div>
     <label>이메일</label>
-    <input type="email" name="email" th:value="${member.email}">
+    <input type="email" th:field="*{email}">
+    <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
   </div>
+
   <div><button type="submit">저장</button></div>
 </form>
 </body>

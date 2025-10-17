@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head><meta charset="UTF-8"><title>요청 오류</title></head>
+<body>
+<h1>요청 오류(404 계열)</h1>
+<p th:text="'메시지: ' + ${message}"></p>
+<p th:text="'경로: ' + ${path}"></p>
+<button onclick="history.back()">이전 페이지로</button>
+</body>
+</html>

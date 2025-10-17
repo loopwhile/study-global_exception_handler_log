@@ -1,0 +1,92 @@
+<!-- src/main/resources/templates/member/apiform.html -->
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <title>회원 폼(API 전송)</title>
+
+  <!-- (선택) Spring Security CSRF 메타 태그를 layout에서 내려주는 경우 자동 인식 -->
+  <meta name="_csrf" th:content="${_csrf?.token}"/>
+  <meta name="_csrf_header" th:content="${_csrf?.headerName}"/>
+</head>
+<body>
+<h2>회원 폼 (AJAX/axios → /api/members)</h2>
+<p><a href="/">홈</a> | <a href="/members">목록</a></p>
+
+<form id="memberForm"
+      th:object="${member}"
+      th:attr="data-id=${memberId}, data-fallback=${action}"
+      method="post">
+
+<div>
+  <label>이름</label>
+  <input type="text" th:field="*{name}" name="name" required>
+</div>
+
+<div>
+  <label>이메일</label>
+  <input type="email" th:field="*{email}" name="email" required>
+</div>
+
+<div style="margin-top:12px;">
+  <button id="submitBtn" type="submit">저장</button>
+  <button type="button" onclick="history.back()">취소</button>
+</div>
+</form>
+
+<!-- axios 먼저, 그 다음 공통 인터셉터 -->
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="/js/axios-common.js"></script>
+
+<script>
+  // CSRF 자동 주입(있을 때만)
+<!--  (function attachCsrfIfPresent(){-->
+<!--    const token  = document.querySelector('meta[name="_csrf"]')?.content;-->
+<!--    const header = document.querySelector('meta[name="_csrf_header"]')?.content || 'X-CSRF-TOKEN';-->
+<!--    if (token) api.defaults.headers.common[header] = token;-->
+<!--  })();-->
+
+  const form = document.getElementById('memberForm');
+  const submitBtn = document.getElementById('submitBtn');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const id = form.dataset.id;             // 수정 여부
+    const fallback = form.dataset.fallback;  // JS 비활성화 시 서버 폴백 사용 가능(참고용)
+    const name = form.querySelector('[name="name"]').value.trim();
+    const email = form.querySelector('[name="email"]').value.trim();
+
+    if (!name || !email) {
+      alert('이름/이메일을 입력하세요.');
+      return;
+    }
+
+    const url = id ? `/api/members/${id}` : `/api/members`;
+    const method = id ? 'put' : 'post';
+
+    // 더블클릭 방지
+    submitBtn.disabled = true;
+
+    try {
+      await api({
+        url,
+        method,
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Go-Back': 'true' // 실패시 axios-common에서 alert + 뒤로가기
+        },
+        data: { name, email }
+      });
+
+      // 성공 후 이동
+      window.location.href = id ? `/members/${id}` : `/members`;
+    } catch (err) {
+      // 실패 처리(alert/back)는 axios-common 인터셉터가 수행
+    } finally {
+      submitBtn.disabled = false;
+    }
+  });
+</script>
+</body>
+</html>
