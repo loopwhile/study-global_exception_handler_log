@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" th:replace="~{error/base :: layout(~{::title}, ~{::section})}">
+<head><title>서버 오류 (5xx)</title></head>
+<body>
+<section>
+  <p class="msg">
+    내부 시스템에서 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.
+  </p>
+  <p class="hint">반복되면 <code>요청 ID</code>를 전달해 주세요.</p>
+</section>
+</body>
+</html>

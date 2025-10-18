@@ -35,11 +35,6 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Web(Thymeleaf) 컨트롤러 전용 전역 예외처리기.
- * - @Controller 로 선언된 MVC 컨트롤러에만 적용됩니다.
- * - HTML 에러 페이지를 반환합니다.
- */
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @ControllerAdvice(annotations = Controller.class)
 public class GlobalWebExceptionHandler {
@@ -60,9 +55,11 @@ public class GlobalWebExceptionHandler {
         model.addAttribute("requestId", rid);
 
         String view = switch (ec.status().value()) {
+            case 403 -> "error/403";
             case 404 -> "error/404";
+            case 400 -> "error/400";
             case 500 -> "error/500";
-            default -> ec.status().is4xxClientError() ? "error/400" : "error/500";
+            default -> ec.status().is4xxClientError() ? "error/4xx" : "error/5xx";
         };
         ModelAndView mv = new ModelAndView(view, model);
         mv.setStatus(ec.status());

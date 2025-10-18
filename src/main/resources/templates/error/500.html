@@ -1,10 +1,15 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="ko">
-<head><meta charset="UTF-8"><title>요청 오류</title></head>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" th:replace="~{error/base :: layout(~{::title}, ~{::section})}">
+<head><title>서버 오류 (500)</title></head>
 <body>
-<h1>요청 오류(500 계열)</h1>
-<p th:text="'메시지: ' + ${message}"></p>
-<p th:text="'경로: ' + ${path}"></p>
-<button onclick="history.back()">이전 페이지로</button>
+<section>
+    <p class="msg">
+        처리 중 문제가 발생했습니다.<br/>
+        잠시 후 다시 시도해 주세요.
+    </p>
+    <ul class="hint">
+        <li>문제가 지속되면 <code>요청 ID</code>와 함께 제보해 주세요.</li>
+    </ul>
+</section>
 </body>
 </html>

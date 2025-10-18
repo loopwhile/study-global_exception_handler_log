@@ -1,0 +1,89 @@
+<!-- templates/error/base.html -->
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      th:fragment="layout (title, content)">
+<head>
+  <meta charset="UTF-8"/>
+  <title th:replace="${title}">오류</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <style>
+    :root {
+      --bg: #0b1220;
+      --card: #101827;
+      --muted: #9aa4b2;
+      --fg: #e5e7eb;
+      --accent: #60a5fa;   /* 4xx 기본 */
+      --accent-5xx: #f87171;/* 5xx */
+      --accent-404: #f59e0b;/* 404 */
+      --btn: #111827;
+      --btnfg: #e5e7eb;
+      --border: #1f2937;
+      --code: #0f172a;
+    }
+    * { box-sizing: border-box; }
+    html,body { margin:0;padding:0;background:var(--bg);color:var(--fg);font-family:ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Noto Sans, "Helvetica Neue", Arial, "Apple SD Gothic Neo", "Malgun Gothic", "돋움", Dotum, sans-serif;}
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .wrap { max-width: 880px; margin: 48px auto; padding: 0 20px; }
+    .card { background: var(--card); border:1px solid var(--border); border-radius:16px; overflow:hidden; }
+    .hdr { padding: 24px 28px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:18px; }
+    .badge { padding:6px 10px; border-radius:999px; font-weight:700; letter-spacing:.02em; border:1px solid var(--border); background:#0b1220; }
+    .status { font-size: 28px; font-weight: 800; margin: 0; line-height: 1.2; }
+    .sub { color: var(--muted); margin:4px 0 0 0; font-size:14px; }
+    .hdr.is-5xx .status, .hdr.is-5xx a { color: var(--accent-5xx); }
+    .hdr.is-404 .status, .hdr.is-404 a { color: var(--accent-404); }
+    .body { padding: 22px 28px; display:grid; grid-template-columns: 1fr; gap: 18px; }
+    .msg { font-size: 16px; line-height: 1.7; }
+    .grid { display:grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .kv { background: #0b1220; border:1px solid var(--border); border-radius:12px; padding:12px 14px; }
+    .k { color: var(--muted); font-size: 12px; letter-spacing:.02em; }
+    .v { margin-top:6px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; font-size: 13px; color: #cbd5e1; word-break: break-all; }
+    .actions { display:flex; flex-wrap:wrap; gap:10px; margin-top: 8px; }
+    .btn { display:inline-flex; align-items:center; gap:8px; padding:10px 14px; border-radius:10px; background:var(--fg); color:var(--btn); font-weight:700; border:1px solid var(--border); text-decoration:none; }
+    .btn.secondary { background:#0b1220; color:var(--fg); }
+    .hint { color:#a5b4fc; font-size:12px; }
+    @media (max-width: 680px) { .grid { grid-template-columns: 1fr; } }
+    code { background: var(--code); padding: .15rem .35rem; border-radius: 6px; border:1px solid var(--border); }
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <div class="hdr"
+         th:classappend="${status} >= 500 ? ' is-5xx' : (${status} == 404 ? ' is-404' : '')">
+      <span class="badge" th:text="${status}">500</span>
+      <div>
+        <h1 class="status" th:text="${error}">COMMON-500</h1>
+        <p class="sub">
+          <span th:text="${#dates.format(T(java.util.Date).from(timestamp.toInstant()), 'yyyy-MM-dd HH:mm:ssXXX')}">2025-10-18 12:00:00+09:00</span>
+          · <span th:if="${requestId}" class="hint">요청 ID: <code th:text="${requestId}">abcd1234</code></span>
+        </p>
+      </div>
+    </div>
+
+    <div class="body">
+      <!-- 페이지 전용 콘텐츠 삽입 -->
+      <section th:replace="${content}">에러 상세</section>
+
+      <!-- 공통 상세 정보 -->
+      <div class="grid">
+        <div class="kv">
+          <div class="k">메시지</div>
+          <div class="v" th:text="${message}">서버 오류</div>
+        </div>
+        <div class="kv">
+          <div class="k">경로</div>
+          <div class="v" th:text="${path}">/requested/path</div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <a class="btn" href="/" rel="nofollow">홈으로</a>
+        <a class="btn secondary" href="javascript:history.back()">이전 페이지</a>
+        <a class="btn secondary" href="javascript:location.reload()">다시 시도</a>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

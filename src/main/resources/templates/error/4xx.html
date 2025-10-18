@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"  th:replace="~{error/base :: layout(~{::title}, ~{::section})}">
+<head><title>요청 오류 (4xx)</title></head>
+<body>
+<section>
+  <p class="msg">
+    요청을 처리할 수 없습니다. 요청 내용을 확인한 뒤 다시 시도해 주세요.
+  </p>
+  <p class="hint">지속되면 요청 ID와 함께 문의해 주세요.</p>
+</section>
+</body>
+</html>
